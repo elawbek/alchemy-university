@@ -1,6 +1,13 @@
 [profile.default]
 src = 'src'
 out = 'out'
+test = "test"
 libs = ['lib']
+auto_detect_solc = false
+solc = '0.8.17'
+optimizer = true
+optimizer_runs = 10_000
+via_ir = true
+gas_reports = ["*"]
 
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
