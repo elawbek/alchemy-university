@@ -9,8 +9,7 @@ contract LearningRevertTest is Test {
     address private owner;
 
     function setUp() external {
-        owner = vm.addr(1);
-        vm.label(owner, "owner");
+        owner = makeAddr("owner");
 
         vm.deal(owner, 3 ether);
         vm.prank(owner, owner);

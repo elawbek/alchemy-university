@@ -13,12 +13,9 @@ contract EscrowTest is Test {
     address private arbiter;
 
     function setUp() external {
-        depositor = vm.addr(1);
-        beneficiary = vm.addr(2);
-        arbiter = vm.addr(3);
-        vm.label(depositor, "depositor");
-        vm.label(beneficiary, "beneficiary");
-        vm.label(arbiter, "arbiter");
+        depositor = makeAddr("depositor");
+        beneficiary = makeAddr("beneficiary");
+        arbiter = makeAddr("arbiter");
 
         vm.deal(depositor, 2 ether);
         vm.prank(depositor, depositor);

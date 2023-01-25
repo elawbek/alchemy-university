@@ -11,12 +11,9 @@ contract MappingsTest is Test {
     address private tester2;
 
     function setUp() external {
-        owner = vm.addr(1);
-        tester1 = vm.addr(2);
-        tester2 = vm.addr(3);
-        vm.label(owner, "owner");
-        vm.label(tester1, "tester1");
-        vm.label(tester2, "tester2");
+        owner = makeAddr("owner");
+        tester1 = makeAddr("tester1");
+        tester2 = makeAddr("tester2");
 
         vm.prank(owner, owner);
         mappings = new Mappings();

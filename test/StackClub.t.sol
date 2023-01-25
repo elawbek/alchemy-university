@@ -10,10 +10,8 @@ contract SendingEtherTest is Test {
     address private tester1;
 
     function setUp() external {
-        owner = vm.addr(1);
-        tester1 = vm.addr(2);
-        vm.label(owner, "owner");
-        vm.label(tester1, "tester1");
+        owner = makeAddr("owner");
+        tester1 = makeAddr("tester1");
 
         vm.prank(owner, owner);
         stackClub = new StackClub();

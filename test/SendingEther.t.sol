@@ -11,12 +11,9 @@ contract SendingEtherTest is Test {
     address private tipper;
 
     function setUp() external {
-        owner = vm.addr(1);
-        charity = vm.addr(2);
-        tipper = vm.addr(3);
-        vm.label(owner, "owner");
-        vm.label(charity, "charity");
-        vm.label(tipper, "tipper");
+        owner = makeAddr("owner");
+        charity = makeAddr("charity");
+        tipper = makeAddr("tipper");
 
         vm.prank(owner, owner);
         sendingEther = new SendingEther(charity);
