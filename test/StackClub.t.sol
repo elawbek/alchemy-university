@@ -5,27 +5,19 @@ import "forge-std/Test.sol";
 import {StackClub} from "src/StackClub.sol";
 
 contract SendingEtherTest is Test {
-    StackClub private stackClub;
-    address private owner;
-    address private tester1;
-
-    function setUp() external {
-        owner = makeAddr("owner");
-        tester1 = makeAddr("tester1");
+    function testAddAndRemove() external {
+        address owner = makeAddr("owner");
+        address tester1 = makeAddr("tester1");
 
         vm.prank(owner, owner);
-        stackClub = new StackClub();
-    }
+        StackClub stackClub = new StackClub();
 
-    function testState() external {
         vm.expectRevert(stdError.indexOOBError);
         stackClub.members(1);
 
         assertEq(stackClub.members(0), owner);
         assertTrue(stackClub.isMember(owner));
-    }
 
-    function testAddAndRemove() external {
         vm.expectRevert();
         stackClub.addMember(tester1);
 

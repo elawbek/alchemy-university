@@ -7,29 +7,20 @@ import {Escrow} from "src/Escrow.sol";
 contract EscrowTest is Test {
     event Approved(uint256 balance);
 
-    Escrow private escrow;
-    address private depositor;
-    address private beneficiary;
-    address private arbiter;
-
-    function setUp() external {
-        depositor = makeAddr("depositor");
-        beneficiary = makeAddr("beneficiary");
-        arbiter = makeAddr("arbiter");
+    function testApprove() external {
+        address depositor = makeAddr("depositor");
+        address beneficiary = makeAddr("beneficiary");
+        address arbiter = makeAddr("arbiter");
 
         vm.deal(depositor, 2 ether);
         vm.prank(depositor, depositor);
-        escrow = new Escrow{value: 1 ether}(beneficiary, arbiter);
-    }
+        Escrow escrow = new Escrow{value: 1 ether}(beneficiary, arbiter);
 
-    function testState() external {
         assertEq(escrow.depositor(), depositor);
         assertEq(escrow.beneficiary(), beneficiary);
         assertEq(escrow.arbiter(), arbiter);
         assertFalse(escrow.isApproved());
-    }
 
-    function testApprove() external {
         vm.expectRevert();
         escrow.approve();
 
