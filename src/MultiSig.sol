@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.18;
 
 contract MultiSig {
     struct Transaction {
@@ -24,7 +24,7 @@ contract MultiSig {
             sstore(0x00, length)
             // mstore(0x00, 0x00)
             for {
-                let i := 0x00
+                let i
                 let slot := keccak256(0x00, 0x20)
                 _owners := add(_owners, 0x20)
             } lt(i, length) {
@@ -105,7 +105,7 @@ contract MultiSig {
     function submitTransaction(
         address _aim,
         uint256 _value,
-        bytes calldata
+        bytes calldata data
     ) external {
         uint256 txId;
         assembly {
@@ -118,16 +118,16 @@ contract MultiSig {
             sstore(slot, shl(0x08, _aim))
             sstore(add(slot, 0x1), _value)
 
-            let dataLen := calldataload(0x64)
+            let dataLen := data.length // calldataload(0x64)
             if gt(dataLen, 0x1f) {
                 sstore(add(slot, 0x02), add(add(dataLen, dataLen), 0x01))
 
                 for {
                     let length := add(div(dataLen, 0x20), 0x01)
-                    let i := 0x00
+                    let i
                     mstore(0x00, add(slot, 0x02))
                     let dataSlot := keccak256(0x00, 0x20)
-                    let offset := 0x84
+                    let offset := data.offset
                 } lt(i, length) {
                     i := add(i, 0x01)
                     dataSlot := add(dataSlot, 0x01)
@@ -140,7 +140,7 @@ contract MultiSig {
             if lt(dataLen, 0x20) {
                 sstore(
                     add(slot, 0x02),
-                    or(calldataload(0x84), add(dataLen, dataLen))
+                    or(calldataload(data.offset), add(dataLen, dataLen))
                 )
             }
         }
@@ -156,10 +156,10 @@ contract MultiSig {
                 revert(0x00, 0x00)
             }
 
-            let success := 0x00
+            let success
             for {
                 let length := sload(0x00)
-                let i := 0x00
+                let i
                 mstore(0x00, 0x00)
                 let ownersSlot := keccak256(0x00, 0x20)
             } lt(i, length) {
@@ -167,8 +167,8 @@ contract MultiSig {
                 ownersSlot := add(ownersSlot, 0x01)
             } {
                 if eq(sload(ownersSlot), caller()) {
-                    i := length
                     success := 0x01
+                    break
                 }
             }
 
@@ -209,7 +209,7 @@ contract MultiSig {
 
                 for {
                     let length := add(div(mload(0x00), 0x20), 0x01)
-                    let i := 0x00
+                    let i
                     mstore(0x20, add(slot, 0x02))
                     let dataSlot := keccak256(0x20, 0x20)
                     let offset := 0x20

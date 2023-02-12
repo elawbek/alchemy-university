@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity ^0.8.18;
 
 contract StackClub {
     constructor() {
@@ -65,15 +65,15 @@ contract StackClub {
                 // mstore(0x00, 0x00)
                 let slot := keccak256(0x00, 0x20)
                 let length := sload(0x00)
-                let i := 0x00
-                let value := 0x00
+                let i
+                let value
             } lt(i, length) {
                 i := add(i, 0x01)
                 slot := add(slot, 0x01)
             } {
                 if eq(addr, sload(slot)) {
                     result := 0x01
-                    i := length
+                    break
                 }
             }
         }

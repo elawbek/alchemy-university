@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.18;
 
 contract Party {
     constructor(uint256) {
@@ -41,7 +41,7 @@ contract Party {
             let length := sload(0x00)
 
             for {
-                let i := 0x00
+                let i
             } lt(i, length) {
                 i := add(i, 0x01)
                 slot := add(slot, 0x01)
@@ -74,7 +74,7 @@ contract Party {
                 for {
                     let length := sload(0x00)
                     let amountPerFriend := div(remain, length)
-                    let i := 0x00
+                    let i
                     let slot := keccak256(0x00, 0x20)
                 } lt(i, length) {
                     i := add(i, 0x01)

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity ^0.8.18;
 
 enum Choices {
     Yes,
@@ -76,18 +76,18 @@ contract Structs {
         assembly {
             for {
                 let length := sload(0x01)
-                let i := 0x00
+                let i
                 mstore(0x00, 0x01)
                 let slot := keccak256(0x00, 0x20)
-                let value := 0x00
+                let value
             } lt(i, length) {
                 i := add(i, 0x01)
                 slot := add(slot, 0x01)
             } {
                 value := sload(slot)
                 if eq(addr, shr(0x08, value)) {
-                    i := length
                     result := and(value, 0xff)
+                    break
                 }
             }
         }
@@ -97,17 +97,17 @@ contract Structs {
         assembly {
             for {
                 let length := sload(0x01)
-                let i := 0x00
+                let i
                 mstore(0x00, 0x01)
                 let slot := keccak256(0x00, 0x20)
-                let value := 0x00
+                let value
             } lt(i, length) {
                 i := add(i, 0x01)
                 slot := add(slot, 0x01)
             } {
                 if eq(addr, shr(0x08, sload(slot))) {
-                    i := length
                     result := 0x01
+                    break
                 }
             }
         }
@@ -115,22 +115,22 @@ contract Structs {
 
     function changeVote(Choices choice) external {
         assembly {
-            let success := 0x00
+            let success
             for {
                 let length := sload(0x01)
-                let i := 0x00
+                let i
                 mstore(0x00, 0x01)
                 let slot := keccak256(0x00, 0x20)
-                let value := 0x00
+                let value
             } lt(i, length) {
                 i := add(i, 0x01)
                 slot := add(slot, 0x01)
             } {
                 value := sload(slot)
                 if eq(caller(), shr(0x08, value)) {
-                    i := length
                     sstore(slot, or(and(value, not(0xff)), choice))
                     success := 0x01
+                    break
                 }
             }
 

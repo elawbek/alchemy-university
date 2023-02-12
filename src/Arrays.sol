@@ -1,12 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity ^0.8.18;
 
 contract Arrays {
-    function sum(uint256[5] calldata) external pure returns (uint256 result) {
+    function sum(uint256[5] calldata arr)
+        external
+        pure
+        returns (uint256 result)
+    {
         assembly {
             for {
                 let length := 0x05
-                let i := 0x00
+                let i  // 0x00 default
                 let j := 0x04
             } lt(i, length) {
                 i := add(i, 0x01)
@@ -17,13 +21,16 @@ contract Arrays {
         }
     }
 
-    function sum(uint256[] calldata) external pure returns (uint256 result) {
+    function sum(uint256[] calldata arr)
+        external
+        pure
+        returns (uint256 result)
+    {
         assembly {
             for {
-                let length := calldataload(0x24)
-                let i := 0x00
-                // let j := add(0x24, calldataload(0x04))
-                let j := 0x44
+                let length := arr.length // calldataload(0x24)
+                let i
+                let j := arr.offset // 0x44
             } lt(i, length) {
                 i := add(i, 0x01)
                 j := add(j, 0x20)
@@ -49,19 +56,18 @@ contract Arrays {
         }
     }
 
-    function filterEvenToStorage(uint256[] calldata) external {
+    function filterEvenToStorage(uint256[] calldata arr) external {
         assembly {
             let currentLength := sload(0x00)
-            let counter := 0x00
+            let counter
 
             for {
                 // mstore(0x00, 0x00)
                 let slot := add(keccak256(0x00, 0x20), currentLength)
-                let length := calldataload(0x24)
-                let value := 0x00
-                let i := 0x00
-                // let j := add(0x24, calldataload(0x04))
-                let j := 0x44
+                let length := arr.length // calldataload(0x24)
+                let value
+                let i
+                let j := arr.offset // 0x44
             } lt(i, length) {
                 i := add(i, 0x01)
                 j := add(j, 0x20)
@@ -77,20 +83,20 @@ contract Arrays {
         }
     }
 
-    function filterEvenToMemory(uint256[] calldata)
+    function filterEvenToMemory(uint256[] calldata arr)
         external
         pure
         returns (uint256[] memory result)
     {
         assembly {
             let ptr := add(result, 0x20)
-            let counter := 0x00
+            let counter
             for {
-                let length := calldataload(0x24)
-                let value := 0x00
-                let i := 0x00
+                let length := arr.length // calldataload(0x24)
+                let value
+                let i
                 // let j := add(0x24, calldataload(0x04))
-                let j := 0x44
+                let j := arr.offset // 0x44
             } lt(i, length) {
                 i := add(i, 0x01)
                 j := add(j, 0x20)

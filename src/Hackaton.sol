@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+pragma solidity ^0.8.18;
 
 contract Hackathon {
     struct Project {
@@ -20,22 +20,22 @@ contract Hackathon {
                 revert(0x00, 0x24)
             }
 
-            let max := 0x00
+            let max
 
             for {
-                let i := 0x00
+                let i
                 // mstore(0x00, 0x00) // array slot
                 let slot := add(keccak256(0x00, 0x20), 0x01) // slot for first ratings
             } lt(i, projectsLength) {
                 i := add(i, 0x01)
                 slot := add(slot, 0x02)
             } {
-                let avg := 0x0
+                let avg
                 let length := sload(slot)
                 if gt(length, 0x00) {
                     for {
                         mstore(0x00, slot)
-                        let j := 0x00
+                        let j
                         let ratingsSlot := keccak256(0x00, 0x20)
                     } lt(j, length) {
                         j := add(j, 0x01)
@@ -55,15 +55,17 @@ contract Hackathon {
         result = projects[winnerIndex];
     }
 
-    function newProject(string calldata) external {
+    function newProject(string calldata str) external {
         assembly {
             let length := sload(0x00) // array len
-            let name := calldataload(add(add(0x04, calldataload(0x04)), 0x20)) // str length le 31 bytes
+            // let name := calldataload(add(add(0x04, calldataload(0x04)), 0x20)) // str length le 31 bytes
+            let name := calldataload(str.offset) // str length le 31 bytes
             // mstore(0x00, 0x00) // array slot
             let slot := add(keccak256(0x00, 0x20), shl(0x01, length)) // slot for project name
             sstore(
                 slot,
-                or(name, shl(0x01, calldataload(add(0x04, calldataload(0x04)))))
+                or(name, shl(0x01, str.length))
+                // or(name, shl(0x01, calldataload(add(0x04, calldataload(0x04)))))
             )
             sstore(0x00, add(length, 0x01))
         }
